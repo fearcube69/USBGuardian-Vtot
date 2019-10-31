@@ -18,7 +18,7 @@ if os.path.isfile("/mnt/usb/Autorun.inf"):
 os.system("sudo truncate -s 0 /opt/USBGuardian/logs/lastAnalysis.log")
 
 #Scan the USB device
-os.system("clamscan -r --verbose /mnt/usb >> /opt/USBGuardian/logs/lastAnalysis.log ")
+os.system("sudo clamdscan --verbose /mnt/usb >> /opt/USBGuardian/logs/lastAnalysis.log ")
 
 #Update device count statistics
 deviceCount()
