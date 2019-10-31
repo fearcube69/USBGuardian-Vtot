@@ -29,3 +29,6 @@ https://usbguardian.wordpress.com/documentation/
 /scripts/scan.py : Using **clamdscan** rather **clamscan** . D'ont to forghet to initialize the clamav daemon before the scan. From a Raspberry Pi B The scan time is greatly improved( clamscan : 8Minutes / clamdscan : 10 secondes)
 
 /scripts/scanAndRemove.py : Same as scan.py. Using clamdscan instead of clamscan.
+
+
+Incomming : French traduction of the GUI / initDaemon when the Raspberry start.
