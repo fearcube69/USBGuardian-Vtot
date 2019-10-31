@@ -14,7 +14,7 @@ from statistics import totalTimeOfScan
 os.system("sudo truncate -s 0 /opt/USBGuardian/logs/lastAnalysis.log")
 
 #Scan the USB device
-os.system("sudo clamscan -r --remove --verbose /mnt/usb >> /opt/USBGuardian/logs/lastAnalysis.log")
+os.system("sudo clamdscan --remove --verbose /mnt/usb >> /opt/USBGuardian/logs/lastAnalysis.log")
 
 #Get the log
 with open("/opt/USBGuardian/logs/lastAnalysis.log") as logFile:
