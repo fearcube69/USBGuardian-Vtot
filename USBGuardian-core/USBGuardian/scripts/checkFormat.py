@@ -20,6 +20,9 @@ for lignes in checkFormat:
 	elif "fat16" in lignes:
 		format = "FAT16"
 
+	elif "ntfs" in lignes:
+		format = "NTFS"
+
 	else:
 		format="Unsupported format"
 		formatOK=1
