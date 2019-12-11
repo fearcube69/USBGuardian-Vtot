@@ -1,0 +1,14 @@
+[Unit]
+Description= When a USB stick is plugged
+
+[Service]
+Type=oneshot
+User=root
+ExecStart=/opt/USBGuardian/scripts/insertUSB.sh
+
+[Install]
+WantedBy=multi-user.target
+
+#/etc/systemd/system/
+#sudo systemctl enable insertUSB.service
+#sudo service insertUSB start
