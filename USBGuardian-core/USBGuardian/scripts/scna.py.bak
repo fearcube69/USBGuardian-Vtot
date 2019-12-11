@@ -11,10 +11,10 @@ from statistics import deviceCount
 from statistics import totalTimeOfScan
 
 #Empty the log file
-os.system("sudo echo "" >  /opt/USBGuardian/logs/lastAnalysis.log")
+os.system("sudo truncate -s 0 /opt/USBGuardian/logs/lastAnalysis.log")
 
 #Scan the USB device
-os.system("clamdscan --verbose /media/pi/ >> /opt/USBGuardian/logs/lastAnalysis.log ")
+os.system("sudo clamdscan --verbose /mnt/usb >> /opt/USBGuardian/logs/lastAnalysis.log ")
 
 #Update device count statistics
 deviceCount()

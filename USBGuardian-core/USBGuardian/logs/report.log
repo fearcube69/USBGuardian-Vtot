@@ -1,0 +1,20 @@
+
+Report created:  Tue 10 Dec 2019 05:11:50 PM CET
+Partitioned: no
+USB stick format: NTFS
+
+/media/pi/USB_AZDRIE/Blackenergy.bin: Xls.Dropper.Blackenergy-7082085-0 FOUND
+
+----------- SCAN SUMMARY -----------
+Infected files: 1
+Time: 4.091 sec (0 m 4 s)
+/media/pi/USB_AZDRIE/Blackenergy.bin: Xls.Dropper.Blackenergy-7082085-0 FOUND
+End of analysis/media/pi/USB_AZDRIE/Blackenergy.bin: Xls.Dropper.Blackenergy-7082085-0 FOUND
+/media/pi/USB_AZDRIE/Blackenergy.bin: Removed.
+
+----------- SCAN SUMMARY -----------
+Infected files: 1
+Time: 4.101 sec (0 m 4 s)
+
+/media/pi/USB_AZDRIE/Blackenergy.bin: Removed.
+End of analysis

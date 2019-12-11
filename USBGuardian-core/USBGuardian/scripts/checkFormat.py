@@ -7,33 +7,34 @@ import os
 #Open the file in which format info is stored
 checkFormat = open('/opt/USBGuardian/scripts/checkFormat',"r")
 formatOK=0
+formated="NONE"
 
 #Read the file to search the format
 for lignes in checkFormat:
 
 	if "vfat" in lignes:
-		format="VFAT"
+		formated = "VFAT"
 
 	elif "fat32" in lignes:
-		format="FAT32"
+		formated = "FAT32"
 
 	elif "fat16" in lignes:
-		format = "FAT16"
+		formated = "FAT16"
 
-	elif "ntfs" in lignes:
-		format = "NTFS"
+	elif "fuseblk" in lignes:
+		formated = "NTFS"
 
 	else:
-		format="Unsupported format"
+		formated = "Unsupported format"
 		formatOK=1
 
 #Write the format in the report
 with open('/opt/USBGuardian/logs/report.log',"a") as report:
-	report.write("USB stick format: " + format+"\n")
+	report.write("USB stick format: " + formated + "\n")
 
 #Delete the checkFormat file
-os.system("sudo rm /opt/USBGuardian/scripts/checkFormat")
+#os.system("sudo rm -f /home/pi/Documents/checkFormat")
 
 #Execute the scan
 if formatOK==0:
-	os.system("sudo /opt/USBGuardian/scripts/scan.py")
+	os.system("sudo python3 /opt/USBGuardian/scripts/scan.py")
