@@ -32,5 +32,16 @@ https://usbguardian.wordpress.com/documentation/
 
 - `/etc/clamav/clamd.conf`: Replace the clamav user and add root user instead.
 
-Incomming : French traduction of the GUI / initDaemon when the Raspberry start.
+- `/etc/udev/rules.d/insertUSB.rule`: Edit the udev rules, working with Raspbian Buster
+
+- `/etc/systemd/system/insertUSB.service`: Add *User* option on *Service* unit
+
+- Now USBGuardian is working on **NTFS**
+
+- Few edit on the GUI, need a few adjustment.
+
+# To-do
+
+- Translation of the GUI
+- Format USB option
 
