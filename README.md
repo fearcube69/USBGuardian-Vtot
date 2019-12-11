@@ -24,7 +24,7 @@ Review your selections and click ‘Flash!’ to begin writing data to the SD ca
 We also created a document explaining how to recreate this software step by step:
 https://usbguardian.wordpress.com/documentation/
 
-# Edit 
+# Edit
 
 - `/scripts/scan.py` : Using **clamdscan** rather **clamscan** . D'ont to forghet to initialize the clamav daemon before the scan. From a Raspberry Pi B The scan time is greatly improved( clamscan : 8Minutes / clamdscan : 10 secondes)
 
@@ -44,8 +44,12 @@ https://usbguardian.wordpress.com/documentation/
 
 - Scan directory is now **/media/pi/**
 
+- When you turn on the raspberry, you need to wait a few minutes util the clamav-daemon is loading.
+
+
 # To-do
 
 - Translation of the GUI
 - Format USB option
-
+- If the clamav-daemon is starting, print a message on the mainwindow
+- Add Option Unit on insertUSB.service so it will wait clamav-daemon is loaded
