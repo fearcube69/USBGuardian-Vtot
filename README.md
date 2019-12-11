@@ -40,6 +40,10 @@ https://usbguardian.wordpress.com/documentation/
 
 - Few edit on the GUI, need a few adjustment.
 
+- I remove the manual mount on /mnt/usb and leave the system doing it by itself (that correct a lot of problem about the ntfs format)
+
+- Scan directory is now **/media/pi/**
+
 # To-do
 
 - Translation of the GUI
