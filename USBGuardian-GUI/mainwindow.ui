@@ -61,7 +61,7 @@ QPushButton {
      <enum>QFrame::NoFrame</enum>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>3</number>
     </property>
     <widget class="QWidget" name="welcome_view">
      <property name="styleSheet">
@@ -92,7 +92,7 @@ QPushButton {
        <string notr="true">color: rgb(21, 101, 192);</string>
       </property>
       <property name="text">
-       <string>Scan your USB drive </string>
+       <string>Analysez votre clé USB</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignCenter</set>
@@ -232,7 +232,7 @@ QPushButton {
        <string notr="true">color: rgb(21, 101, 192);</string>
       </property>
       <property name="text">
-       <string>with USBGuardian</string>
+       <string>avec USBGuardian</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignBottom|Qt::AlignHCenter</set>
@@ -253,7 +253,7 @@ QPushButton {
        </font>
       </property>
       <property name="text">
-       <string>Insert your USB device</string>
+       <string>Insérez votre clé USB</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignHCenter|Qt::AlignTop</set>
@@ -278,7 +278,7 @@ QPushButton {
        </font>
       </property>
       <property name="text">
-       <string>USBGuardian will scan for malwares and alert you</string>
+       <string>USBGuardian se charge du reste !</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignHCenter|Qt::AlignTop</set>
@@ -302,7 +302,7 @@ QPushButton {
        </font>
       </property>
       <property name="text">
-       <string>Clean malware easily</string>
+       <string>Nettoyer les virus facilement !</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignHCenter|Qt::AlignTop</set>
@@ -414,7 +414,7 @@ QPushButton {
           </font>
          </property>
          <property name="text">
-          <string>Scanning</string>
+          <string>Analyse</string>
          </property>
         </widget>
        </item>
@@ -450,7 +450,7 @@ QPushButton {
        <string notr="true">color: rgb(255, 56, 56);</string>
       </property>
       <property name="text">
-       <string>Do not remove the USB drive</string>
+       <string>Ne retirez pas votre clé USB !</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignCenter</set>
@@ -533,7 +533,7 @@ QPushButton {
        <string notr="true">color: rgb(21, 101, 192);</string>
       </property>
       <property name="text">
-       <string>Scanning your USB drive</string>
+       <string>Analyse de votre clé USB en cours ...</string>
       </property>
      </widget>
      <widget class="QPushButton" name="btn_cancel_analyze">
@@ -651,7 +651,7 @@ QPushButton {
           </font>
          </property>
          <property name="text">
-          <string>Always scan your USB drive before use</string>
+          <string>En cas de doute : securite@exemple.fr</string>
          </property>
          <property name="alignment">
           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
@@ -683,7 +683,7 @@ QPushButton {
           <string notr="true">color: rgb(55, 71, 79);</string>
          </property>
          <property name="text">
-          <string>Safe to remove USB drive</string>
+          <string>Vous pouvez retirer votre clé USB</string>
          </property>
         </widget>
        </item>
@@ -695,7 +695,7 @@ QPushButton {
           </font>
          </property>
          <property name="text">
-          <string>The USB drive can now be safely removed</string>
+          <string>La clé peut être retirée sans risque.</string>
          </property>
         </widget>
        </item>
@@ -797,7 +797,7 @@ QPushButton {
        <string notr="true">color: rgb(21, 101, 192);</string>
       </property>
       <property name="text">
-       <string>Analyze Report</string>
+       <string>Rapport d'analyse</string>
       </property>
      </widget>
      <widget class="QWidget" name="verticalLayoutWidget_3">
@@ -806,7 +806,7 @@ QPushButton {
         <x>140</x>
         <y>120</y>
         <width>641</width>
-        <height>95</height>
+        <height>99</height>
        </rect>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_4">
@@ -823,7 +823,7 @@ QPushButton {
           <string notr="true">color: rgb(55, 71, 79);</string>
          </property>
          <property name="text">
-          <string>No problem detected</string>
+          <string>Aucun problème détecté</string>
          </property>
         </widget>
        </item>
@@ -835,7 +835,7 @@ QPushButton {
           </font>
          </property>
          <property name="text">
-          <string>Total time: 9 minutes 30 seconds</string>
+          <string>Temps total: 9 minutes 30 seconds</string>
          </property>
         </widget>
        </item>
@@ -847,7 +847,7 @@ QPushButton {
           </font>
          </property>
          <property name="text">
-          <string>Files analyzed: 90/100</string>
+          <string>Fichier analysé: 90/100</string>
          </property>
         </widget>
        </item>
@@ -962,7 +962,7 @@ QPushButton {
        </font>
       </property>
       <property name="text">
-       <string>Eject</string>
+       <string>Ejecter</string>
       </property>
      </widget>
      <widget class="QPushButton" name="btnRemove">
@@ -980,7 +980,7 @@ QPushButton {
        </font>
       </property>
       <property name="text">
-       <string>Remove malwares</string>
+       <string>Supprimer les virus</string>
       </property>
      </widget>
      <widget class="QPushButton" name="btnFormat">
@@ -998,7 +998,7 @@ QPushButton {
        </font>
       </property>
       <property name="text">
-       <string>Format USB drive</string>
+       <string>Formater la clé</string>
       </property>
      </widget>
      <widget class="QPushButton" name="btnShowInfectedFiles">
@@ -1114,7 +1114,7 @@ QPushButton {
        <bool>false</bool>
       </property>
       <property name="text">
-       <string>Close</string>
+       <string>Fermer</string>
       </property>
       <property name="checkable">
        <bool>false</bool>
@@ -1143,7 +1143,7 @@ QPushButton {
        <string notr="true">color: rgb(55, 71, 79);</string>
       </property>
       <property name="text">
-       <string>USB drive format is not supported</string>
+       <string>Le format de votre clé USB n'est pas supporté !</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignCenter</set>
@@ -1192,7 +1192,7 @@ QPushButton {
        </font>
       </property>
       <property name="text">
-       <string>Close</string>
+       <string>Fermer</string>
       </property>
       <property name="flat">
        <bool>false</bool>
@@ -1204,7 +1204,7 @@ QPushButton {
         <x>30</x>
         <y>270</y>
         <width>751</width>
-        <height>133</height>
+        <height>138</height>
        </rect>
       </property>
       <layout class="QHBoxLayout" name="horizontalLayout_9">
@@ -1223,7 +1223,7 @@ QPushButton {
             <string notr="true">color: rgb(55, 71, 79);</string>
            </property>
            <property name="text">
-            <string>Number of devices scanned</string>
+            <string>Nombre de clés analysées</string>
            </property>
           </widget>
          </item>
@@ -1240,7 +1240,7 @@ QPushButton {
             <string notr="true">color: rgb(55, 71, 79);</string>
            </property>
            <property name="text">
-            <string>Number of malwares detected</string>
+            <string>Nombre de virus détectés</string>
            </property>
           </widget>
          </item>
@@ -1257,7 +1257,7 @@ QPushButton {
             <string notr="true">color: rgb(55, 71, 79);</string>
            </property>
            <property name="text">
-            <string>Number of files scanned</string>
+            <string>Nombre de fichiers analysés</string>
            </property>
           </widget>
          </item>
@@ -1274,7 +1274,7 @@ QPushButton {
             <string notr="true">color: rgb(55, 71, 79);</string>
            </property>
            <property name="text">
-            <string>% of infected devices</string>
+            <string>% de clés infectées</string>
            </property>
           </widget>
          </item>
@@ -1291,7 +1291,7 @@ QPushButton {
             <string notr="true">color: rgb(55, 71, 79);</string>
            </property>
            <property name="text">
-            <string>Average time of scan</string>
+            <string>Temps moyen des analyses</string>
            </property>
           </widget>
          </item>
@@ -1373,7 +1373,7 @@ QPushButton {
        <string notr="true">color: rgb(55, 71, 79);</string>
       </property>
       <property name="text">
-       <string>General</string>
+       <string>Versions</string>
       </property>
      </widget>
      <widget class="QLabel" name="label_statistics_title">
@@ -1396,7 +1396,7 @@ QPushButton {
        <string notr="true">color: rgb(55, 71, 79);</string>
       </property>
       <property name="text">
-       <string>Statistics</string>
+       <string>Quelques chiffres</string>
       </property>
      </widget>
      <widget class="QWidget" name="horizontalLayoutWidget_7">

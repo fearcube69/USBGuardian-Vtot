@@ -4,7 +4,7 @@
 import os
 
 #Unmount the USB stick
-os.system("sudo umount -f /mnt/securite/")
+os.system("sudo umount -f /mnt/securite")
 
 #Open the report file
 with open("/opt/USBGuardian/logs/report.log") as report:

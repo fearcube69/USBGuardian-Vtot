@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #Unmount usb stick in case there is an old one
-sudo umount -f /mnt/usb
+sudo umount -f /mnt/securite
 #Change directory
 cd /opt/USBGuardian/logs
 
@@ -33,16 +33,11 @@ fi;
 
 sudo touch /opt/USBGuardian/scripts/checkFormat
 sudo echo "NONE" > /opt/USBGuardian/scripts/checkFormat
-#sudo chown pi /home/pi/Documents/checkFormat
-#sudo chmod 777 /home/pi/Documents/checkFormat
+
 
 #Store format info about the key
 sudo mount | grep /media/securite/ > /opt/USBGuardian/scripts/checkFormat
-#bash /opt/USBGuardian/scripts/test.sh
+
 #Launch python script
 python3 /opt/USBGuardian/scripts/checkFormat.py
 
-#If the format is supported start the scan
-#if [ "$partitioned" = "0" ]; then
-#	sudo python3 /opt/USBGuardian/scripts/scan.py
-#fi
