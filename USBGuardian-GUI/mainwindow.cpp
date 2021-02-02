@@ -8,6 +8,7 @@
 #include <QStorageInfo>
 #include <QTimer>
 #include <QKeyEvent>
+#include <QRegularExpression>
 
 #include "details.h"
 
@@ -219,7 +220,7 @@ void MainWindow::processProgOutput(){
         ui->progressBar->setValue(fileOkPercentage.toInt());
         if (ui->progressBar->value() >= 99 && scanDone == false){
             scanDone = true;
-            processProg->close()
+            processProg->close();
         }
     }
 }
