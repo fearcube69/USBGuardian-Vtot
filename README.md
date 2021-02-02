@@ -8,7 +8,7 @@
 - Changement du répertoire de scan par défaut en `/media/securite`.
 - La clé USB est automatiquement montée par le système et plus par USBGuardian.
 - Changement des rèlges Udev pour fonctionner avec Raspbian Buster.
-- (Traduction partiel en français de l'interface.) pas encore push
+- Traduction partiel en français de l'interface.
 - Supporte les clés au format NTFS
 
 
