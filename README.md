@@ -1,5 +1,7 @@
 # USBGuardian
 
+:warning: Le projet est actuellement en développment, il se peut qu'il y ait quelques problèmes, n'hésitez pas à contribuer ou à me contacter en cas de problème ! 
+
 ## Mise à jour importante :mage:
 
 - Fonctionne avec une Raspberry Pi 4.
