@@ -75,7 +75,8 @@ i = 0
 for i in range(len(temp_array)):
     #print(temp_fs)
     #print(temp_array)
-    
+    #print("Formatage de "+temp_array[i]+" en "+temp_fs[i])
+
     # VFAT
     if temp_fs[i] == "vfat":
         if partitioned == 0:
@@ -91,7 +92,6 @@ for i in range(len(temp_array)):
         #Exec : sudo mkfs.vfat -I temp_array[i]
         mkfsCommand = "sudo mkfs.vfat -I "+temp_array[i]
         subprocess.call(mkfsCommand.split())
-        break
     
     # FAT32
     elif temp_fs[i] == "fat":
@@ -108,7 +108,6 @@ for i in range(len(temp_array)):
         #Exec : sudo mkfs.fat -F 32 -I temp_array[i]
         mkfsCommand = "sudo mkfs.fat -F 32 -I "+temp_array[i]
         subprocess.call(mkfsCommand.split())
-        break
 
     # NTFS
     elif temp_fs[i] == "ntfs":
@@ -125,9 +124,7 @@ for i in range(len(temp_array)):
         #Exec : sudo mkfs.ntfs temp_array[i]
         mkfsCommand = "sudo mkfs.ntfs -f "+temp_array[i]
         subprocess.call(mkfsCommand.split())
-        break
 
     else:
         print("Error")
         break
-
