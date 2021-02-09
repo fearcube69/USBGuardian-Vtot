@@ -35,7 +35,7 @@ with open("/opt/USBGuardian/logs/lastAnalysis.log") as logFile:
 			if "FOUND" in line:
 				report.write(line)
 
-			#Update scanned files count statistics
+			#Update scanned files count statistics // NOT WORKING WITH CLAMDSCAN
 			elif re.match("Scanned files:",line):
 				sentence,count = line.split(": ")
 				fileCount(int(count))
@@ -53,7 +53,7 @@ with open("/opt/USBGuardian/logs/lastAnalysis.log") as logFile:
 				time,postString =value.split(" sec")
 				totalTimeOfScan( time )
 
-		report.write("End of analysis")
+		report.write("End of analysis/n")
 
 #Copy the report at the end of the history file
 with open("/opt/USBGuardian/logs/report.log") as report2, open ("/opt/USBGuardian/logs/history.log",'a+') as history:

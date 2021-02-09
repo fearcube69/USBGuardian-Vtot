@@ -17,7 +17,7 @@ os.system("sudo truncate -s 0 /opt/USBGuardian/logs/lastAnalysis.log")
 
 #Scan the USB device
 os.system("sudo clamdscan --remove --verbose /media/securite/ >> /opt/USBGuardian/logs/lastAnalysis.log")
-time.sleep(10)
+time.sleep(5)
 #Get the log
 with open("/opt/USBGuardian/logs/lastAnalysis.log") as logFile:
 
