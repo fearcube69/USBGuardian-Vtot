@@ -232,7 +232,9 @@ securite $> sudo chmod 760 -R /opt/USBGuardian/logs
 
 # To-do :mechanical_arm:
 
-- [x] fix permission errors `/logs` & `/media/securite`
-- [ ] Install script
-- [x] Fix **formatUSB.py**
-- [ ] Problem of duplicates on the display of found viruses
+- [x] fix permission errors `/logs` & `/media/securite`  
+- [ ] Install script  
+- [x] Fix **formatUSB.py**  
+- [ ] Problem of duplicates on the display of found viruses  
+- [ ] Use Subprocessing everywhere (python)
+- [ ] On boot, execute `systemctl daemon-reload` for clamav-daemon.
