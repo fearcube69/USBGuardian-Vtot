@@ -1,55 +1,55 @@
 # USBGuardian
 
-:warning: Le projet est actuellement en développment, il se peut qu'il y ait quelques problèmes, n'hésitez pas à contribuer ou à me contacter en cas de problème ! 
+:warning: The project is currently under development, there may be some problems, feel free to contribute or contact me if you have any problem !
 
-## Mise à jour importante :mage:
+## Major updates :mage:
 
-- Fonctionne avec une Raspberry Pi 4.
-- Fonctionne avec le daemon clamAV pour une analyse plus rapide.
-- Changement de l'utilisateur **pi** en **securite**.
-- Changement du répertoire de scan par défaut en `/media/securite`.
-- La clé USB est automatiquement montée par le système et plus par USBGuardian.
-- Changement des rèlges Udev pour fonctionner avec Raspbian Buster.
-- Traduction partiel en français de l'interface.
-- Supporte les clés au format NTFS
+- Works with Raspberry Pi 4.
+- Use of ClamAV daemon for quicker scans.
+- User **pi** is now **securite**.
+- Default scan directory is now `/media/securite`.
+- USB is mounted with Raspbian and no longuer with USBGuardian.
+- Edit udev rules to work with Raspbian Buster
+- NTFS is supported.
+- Change of formating method `formatUSB.py`.
 
 
-# Comment ça fonctionne ? :sassy_man: 
-Vous pouvez consulter la documentation sur le site officiel :[Documentation](https://usbguardian.wordpress.com/documentation/)
+# How it works ? :sassy_man: 
+You can read the offical documentation here :[Documentation](https://usbguardian.wordpress.com/documentation/)
 
-Pour l'utilisation de la StationBlanche voici la documentation : [usbguardian-user-manual.pdf](https://usbguardian.files.wordpress.com/2018/02/usbguardian-user-manual.pdf)
+Look at the user manual : [usbguardian-user-manual.pdf](https://usbguardian.files.wordpress.com/2018/02/usbguardian-user-manual.pdf)
 
-# Prérequis :mag_right:
-- Raspberry Pi 4 (2GB ou plus)
-- Carte SD (16GB ou plus)
-- img Raspbian Buster Desktop (déjà flashé sur la carte)
-- Clavier / Souris
-- Connexion internet
+# Prerequisite  :mag_right:
+- Raspberry Pi 4 (2GB or +)
+- SDCard (16GB or +)
+- img Raspbian Buster Desktop
+- Keyboard / Mouse
+- Internet connection
 
-# Installation - Raspberry :strawberry:
+# Install - Raspberry :strawberry:
 
-Pour le moment, aucun script d'installation n'est disponible, ce sera surement ma prochaine mission !  
-Dans la partie installation, je vais aborder la configuration de la Raspberry et ensuite l'installation et la configuration de USBGUardian.
+For the moment, no installation script is available, this will surely be my next mission!  
+In the installation part, I'll talk about the Raspberry configuration and then the installation and configuration of USBGUardian.
 
-*La partie Flash de la carte SD ne sera pas expliqué ici*
+*The Flash part of the SD card will not be explained here*.
 
-## ----- Mise à jour
+## ----- Update
 ```bash
 pi> sudo apt update
 pi> sudo apt upgrade
 pi> sudo raspi-config
 ```
-Dans **raspi-config** selectionnez :
+Use **raspi-config** and then :
 - Advanced Options --> A1 Expand Filesystem
-Cette option permet de vérifier si Raspbian utilise bien 100% de l'espace disponible.
+This option allows you to check if Raspbian is using 100% of the available space.
 
 ## ----- Root passwd
 ```bash
 pi $> sudo -i
 root> passwd
 ```
-## ----- Configuration du SWAP
-Nous allons ajouter 2GB en SWAP.
+## ----- SWAP
+Let's add 2GB of SWAP
 ```bash
 root>apt install vim
 root> dphys-swapfile swapoff
@@ -58,8 +58,8 @@ root> vim /etc/dphys-swapfile
 root> dphys-swapfile setup
 root> dphys-swapfile swapon
 ```
-## ----- Création d'un nouvel utilisateur
-L'utilisateur **securite** va remplacer le compte pi.
+## ----- New user
+**securite** will replace the **pi** account.
 ```bash
 root > useradd -m securite
 root > passwd securite 
@@ -69,43 +69,45 @@ root > su securite
 securite $> sudo usermod -a -G adm,dialout,cdrom,sudo,audio,video,plugdev,games,users,input,netdev,gpio,i2c,spi securite
 securite $> groups securite
 ```
-## ----- Securisation du compte pi
-Dans cette partie on va supprimer le compte pi. Si la suppression ne fonctionne pas (Utilisation d'un processus par pi),
-repoussez la suppression au prochain reboot de la machine.
+## ----- Securiring pi account
+In this part we will delete the pi account. If the deletion doesn't work (Pi user is using a process),
+Push the deletion back to the next reboot of the machine.
+
 ```bash
 securite $> sudo pkill -u pi
 securite $> sudo deluser -remove-home pi
 securite $> sudo vim /etc/sudoers.d/010_pi-nopasswd
 	Ø Edit : pi --> securite
 ```
-## ----- Configuration du SSH
-Permet une connexion SSH sécurisé en utilisant des clés publique / privées.
-Si vous n'avez pas de clés à disposition pour une connexion SSH, changez l'option PasswordAuthentication no en yes
+## ----- SSH Configuration
+Allows a secure SSH connection using public/private keys.
+If you do not have keys available for an SSH connection, change the PasswordAuthentication no option to yes.
+
 ```bash
 securite $> mkdir ~/.ssh
 securite $> ssh-keygen -t ed25519
 securite $> ssh-keygen -t rsa
 securite $> vim ~/.ssh/autorized_keys 
-	Ø Edit : Ajouter ses clés PUBLIC ssh dans le fichier
+	Ø Edit : Add your public keys in the file
 securite $> sudo vim /etc/ssh/sshd_config
 	Ø Edit:
-		○ Port 2222 # Change le port par défaut en 2222
-		○ PasswordAuthentication no # Désactive la connexion par mot de passe, uniquement par clés
-		○ PermitRootLogin no # Désactive la connexion du compte root en ssh
-		○ Banner /etc/issue.net # Ajoute une belle bannière (voir exemple en haut à droite de la procédure)
+		○ Port 2222 # Change default port to 2222
+		○ PasswordAuthentication no # Disable password connection, only keys are allowed
+		○ PermitRootLogin no # Remove root connection with ssh.
+		○ Banner /etc/issue.net # Add a beautiful banner before auth.
 securite $> sudo service ssh restart
 ```
 
 ## ----- Hostname
-Modification du nom de la machine, ici le nom sera station01. Si station01 est déjà utilisé, incrémentez en conséquence.
+Modification of the machine name, here the name will be station01. If station01 is already in use, just add +1.
 ```bash
 securite $> sudo vim /etc/hostname
 	Ø Edit : station01
 securite $> sudo vim /etc/hosts
-	Ø Edit : changer raspberry en station01
+	Ø Edit : remove raspberry and add station01
 ```
-## ----- (Optionnel : ZSH)
-Permet d'installer un terminal zsh avec un plugin pour une meilleure expérience CLI.
+## ----- (Optionnal : ZSH)
+Install a zsh terminal with a plugin for a better CLI experience.
 ```bash
 securite $> sudo apt install zsh
 securite $> sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
@@ -116,43 +118,42 @@ securite $> sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/to
 securite $> sudo reboot
 ```
 
-# Installation & Configuration - USBGuardian :shield:
+# Install & Config - USBGuardian :shield:
 
-## ----- Installation & Configuration ClamAV
+## ----- Install & Config ClamAV
 ```bash
 securite $> sudo apt install clamav clamav-daemon
 securite $> sudo systemctl enable clamav-daemon
 securite $> ls -l /var/log/clamav
 ```
-Après l'installation de clamav, il doit y avoir un fichier `freshclam.log` dans `/var/log/clamav` .
-Si le fichier n'existe pas, créez le avec les commandes suivantes :
+After installing clamav, there should be a `freshclam.log` file in `/var/log/clamav` .  
+If the file does not exist, create it with the following commands:  
 ```bash
 securite $> sudo touch /var/log/clamav/freshclam.log
 securite $> chmod 600 /var/log/clamav/freshclam.log
 securite $> chown clamav /var/log/clamav/freshclam.log
 ```
-Lancez une première update de la base virale.
+Run a first update of the virus database.  
 ```bash
 securite $> sudo freshclam
 ```
 
-Si vous rencontrez l'erreur suivante : `ERROR : Problem with internal logger …`
-Exécutez les commandes dans cette ordre :
+If you encounter the following error: `ERROR : Problem with internal logger …`
+Execute the commands in this order:  
 ```bash
 securite $> sudo /etc/init.d/clamav-freshclam stop
 securite $> sudo freshclam
 securite $> sudo /etc/init.d/clamav-freshclam start
 ```
 
-Modification de la conf clamav-daemon
+Modification of the clamav-daemon conf:  
 ```bash
 securite $> sudo vim /etc/systemctl/system/clamav-daemon.service.d/extend.conf
 	Ø Edit : ExecStartPre=/bin/mkdir -p /run/clamav
 securite $> sudo systemctl daemon-reload
 securite $> sudo service clamav-daemin start
 ```
-
-Mise à jour automatique de la base virale.
+Automatic update of the virus database:
 ```bash
 securite $> sudo vim /etc/cron.daily/freshclam
 	Ø Edit :
@@ -172,62 +173,66 @@ securite $> sudo chmod +x -R /opt/USBGuardian/scripts
 ```
 
 ## ----- QT5
-Qt5 va vous être utile pour compiler l'interface graphique. SI vous voulez modifier l'interface graphique, je vous recommande d'installer le paquet `qtcreator`.
+QQt5 will help you to compile the GUI. If you want to modify the GUI, I recommend you to install the `qtcreator` package:  
 ```bash
-securite $> sudo apt install qt5-default
+securite $> sudo apt install qt5-default qtcreator
 securite $> cd USBGuardian-GUI
 ```
-Ensuite, il faut compiler l'application pour avoir un binaire exécutable.
+Then, you have to compile the application to have an executable binary:  
 ```bash
 securite $> cd USBGuardian-GUI
 securite $> qmake USBGUardian.pro
 securite $> make
 ```
 
-Exécutez ensuite le binaire USBGuardian pour exécuter l'interface graphique.
+Then run the USBGuardian binary to run the GUI:  
 ```bash
 securite $> cd USBGuardian-GUI
 securite $> ./USBGuardian
 ```
 
-**En cas de modification de l'interface graphique, vous devez re-compiler l'application.**
+**If the GUI is modified, you have to re-compile the application !**  
 
-## ----- Détection USB
-Ajout d'un règle UDEV qui va détecter si une clé USB est branchée.
-A la détection d'un clé USB "block" la règle udev insertUSB.rules va exécuter le service insertUSB.service.
+## ----- udev rules for USB
+Add a UDEV rule that will detect if a USB key is plugged in.  
+On detection of a "block" USB key the udev rule insertUSB.rules will execute the insertUSB.service.  
 ```bash
 securite $> sudo cp ~/USBGuardian/udev/insertUSB.rules /etc/udev/rules.d/insertUSB.rules
 ```
-On reload les règles udev avec la commande :
+Reload the udev rules with the command :  
 ```bash
 securite $> sudo udevadm control --reload
 ```
 
 ## ----- insertUSB.service
-Création du service qui va exécuter notre analyse.
-
+Creation of the service that will perform our analysis.  
 ```bash
 securite $> sudo cp ~/USBGuardian/service/insertUSB.service /etc/systemd/system/insertUSB.service
 securite $> sudo systemctl enable insertUSB.service
 ```
-## ----- Montage automatique
+## ----- Automount
 
-Allez dans l'explorateur de fichier Raspbian.
-	- Edition --> Préférences --> Gestion des supports amovibles --> Décochez "Afficher les options disponibles …"
+Go to the Raspbian file explorer:  
+	- Edit --> Preferences --> Removable media management --> DUnckeck "Display options..."  
+	
+## ----- Permissions
 
-## ----- :boom:  Modification temporaire :boom: 
-
-Problèmes de droits pour /media/securite et /opt/USBGuardian/logs
-Pour régler le problème temporairement j'ai ajouté les droits 777 sur les deux dossier **(ATTENTION CE N'EST PAS RECOMMANDEZ)**
+Make sure that your securite user and clamav user have the same rights:  
+**/media/securite/**:  
 ```bash
-securite $> sudo chmod 777 -R /opt/USBGuardian/logs
-securite $> sudo chmod 777 -R /media/securite
+securite $> sudo chown clamav:clamav -R /media/securite
+securite $> sudo chmod 760 -R /media/securite
+```
+
+**/opt/USBGuardian/logs** :  
+```bash
+securite $> sudo chown securite -R /opt/USBGuardian/logs
+securite $> sudo chmod 760 -R /opt/USBGuardian/logs
 ```
 
 # To-do :mechanical_arm:
 
-- [ ] Debugger problème de droit pour `/logs/` et `/media/securite`
-- [ ] Faie un script d'installation.
-- [ ] Fournir une image fontionnelle.
-- [ ] Debugger la fonction "Formater une clé USB"
-- [ ] Problème de doublons sur l'affichage des virus trouvés
+- [x] fix permission errors `/logs` & `/media/securite`
+- [ ] Install script
+- [x] Fix **formatUSB.py**
+- [ ] Problem of duplicates on the display of found viruses
