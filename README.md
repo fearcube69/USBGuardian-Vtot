@@ -1,5 +1,7 @@
 # USBGuardian
 
+:warning: Le projet est actuellement en développment, il se peut qu'il y ait quelques problèmes, n'hésitez pas à contribuer ou à me contacter en cas de problème ! 
+
 ## Mise à jour importante :mage:
 
 - Fonctionne avec une Raspberry Pi 4.
@@ -8,7 +10,7 @@
 - Changement du répertoire de scan par défaut en `/media/securite`.
 - La clé USB est automatiquement montée par le système et plus par USBGuardian.
 - Changement des rèlges Udev pour fonctionner avec Raspbian Buster.
-- (Traduction partiel en français de l'interface.) pas encore push
+- Traduction partiel en français de l'interface.
 - Supporte les clés au format NTFS
 
 
