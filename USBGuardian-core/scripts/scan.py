@@ -23,7 +23,7 @@ deviceCount()
 with open("/opt/USBGuardian/logs/lastAnalysis.log") as logFile:
 
 	#Copy the log summary at the end of the report
-	os.system("sudo tail -n 10 /opt/USBGuardian/logs/lastAnalysis.log >> /opt/USBGuardian/logs/report.log")
+	os.system("sudo tail -n 10 /opt/USBGuardian/logs/lastAnalysis.log | grep -v FOUND >> /opt/USBGuardian/logs/report.log")
 
 	linesLog = logFile.readlines()
 	with open ("/opt/USBGuardian/logs/report.log",'a+') as report:
@@ -53,7 +53,8 @@ with open("/opt/USBGuardian/logs/lastAnalysis.log") as logFile:
 				time,postString =value.split(" sec")
 				totalTimeOfScan( time )
 
-		report.write("End of analysis/n")
+		report.write("End of analysis\n")
+#os.system("sudo sort /opt/USBGuardian/logs/report.log | uniq >> /opt/USBGuardian/logs/report.log")
 
 #Copy the report at the end of the history file
 with open("/opt/USBGuardian/logs/report.log") as report2, open ("/opt/USBGuardian/logs/history.log",'a+') as history:

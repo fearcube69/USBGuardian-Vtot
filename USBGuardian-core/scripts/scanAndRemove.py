@@ -13,6 +13,7 @@ from statistics import totalTimeOfScan
 
 #Empty the log file
 os.system("sudo truncate -s 0 /opt/USBGuardian/logs/lastAnalysis.log")
+#os.system("sudo truncate -s 0 /opt/USBGuardian/logs/report.log")
 #os.system("sudo sed -i '/-/,$d' /opt/USBGuardian/logs/report.log")
 
 #Scan the USB device
@@ -25,7 +26,7 @@ with open("/opt/USBGuardian/logs/lastAnalysis.log") as logFile:
 
 	with open ("/opt/USBGuardian/logs/report.log",'a+') as report:
 		#Copy the log summary at the end of the report
-		os.system("sudo tail -n 10 /opt/USBGuardian/logs/lastAnalysis.log >> /opt/USBGuardian/logs/report.log")
+		os.system("sudo tail -n 10 /opt/USBGuardian/logs/lastAnalysis.log | egrep '(FOUND|Removed.)' >> /opt/USBGuardian/logs/report.log")
 
 		#Go through the log file
 		for line in linesLog:
