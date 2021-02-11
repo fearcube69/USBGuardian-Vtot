@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #Unmount usb stick in case there is an old one
-sudo umount -f /mnt/usb
+sudo umount -f /mnt/securite/*
 #Change directory
 cd /opt/USBGuardian/logs
 
