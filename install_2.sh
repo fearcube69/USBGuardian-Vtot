@@ -1,15 +1,8 @@
 #!/bin/bash
 
-# Update packages
-sudo apt update && sudo apt upgrade -y
+# Remove the temporary cron job
+sudo crontab -l | grep -v '/path/to/post-reboot-script.sh' | sudo crontab -
 
-#expanding partitions
-if sudo raspi-config --expand-rootfs; then
-    echo "Root partition expanded. System will reboot now."
-    sudo reboot
-else
-    echo "Root partition is already expanded or there was an issue expanding."
-fi
 
 # Set root password - Remember, setting a hardcoded root password in a script is not secure
 echo "root:YOUR_ROOT_PASSWORD" | sudo chpasswd
@@ -43,9 +36,14 @@ sudo service ssh restart
 echo "station01" | sudo tee /etc/hostname
 sudo sed -i 's/raspberry/station01/' /etc/hosts
 
-# Install zsh and configure
+# # Install zsh and configure
+# sudo apt install -y zsh
+# sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+
+# Install zsh without launching a new shell immediately
 sudo apt install -y zsh
-sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
+
 
 # ClamAV configurations
 sudo apt install -y clamav clamav-daemon
