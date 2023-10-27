@@ -1,0 +1,4 @@
+ 1. Install script
+ 2. Daemon reload on boot (autostart service)
+ 3. Subprocessing
+ 4. Virustotal

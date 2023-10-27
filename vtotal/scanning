@@ -1,0 +1,22 @@
+upload
+
+if file < 100mb
+        go
+        else{too large}
+
+if no of file > 4
+tell to choose less
+else {
+    upload
+}
+
+create interval for upload.
+must have list of file to upload
+
+send 
+
+status = succ, establish cooldown time
+count to 30 second
+
+after 30 sec,
+send another
