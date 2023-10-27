@@ -2,7 +2,14 @@
 
 # Update packages
 sudo apt update && sudo apt upgrade -y
-sudo raspi-config
+
+#expanding partitions
+if sudo raspi-config --expand-rootfs; then
+    echo "Root partition expanded. System will reboot now."
+    sudo reboot
+else
+    echo "Root partition is already expanded or there was an issue expanding."
+fi
 
 # Set root password - Remember, setting a hardcoded root password in a script is not secure
 echo "root:YOUR_ROOT_PASSWORD" | sudo chpasswd
