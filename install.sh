@@ -1,132 +1,80 @@
-#pac update
+#!/bin/bash
 
-sudo apt update
-sudo apt upgrade
+# Update packages
+sudo apt update && sudo apt upgrade -y
 sudo raspi-config
 
-# grab pwd
+# Set root password - Remember, setting a hardcoded root password in a script is not secure
+echo "root:YOUR_ROOT_PASSWORD" | sudo chpasswd
 
-pi $> sudo -i
-root> passwd
+# Configure swap
+sudo apt install -y vim
+sudo dphys-swapfile swapoff
+echo "CONF_SWAPSIZE=2000" | sudo tee /etc/dphys-swapfile
+sudo dphys-swapfile setup
+sudo dphys-swapfile swapon
 
-#swap
+# Create and configure 'securite' user
+sudo useradd -m securite
+echo "securite:YOUR_USER_PASSWORD" | sudo chpasswd
+echo "securite ALL=(ALL:ALL) ALL" | sudo tee -a /etc/sudoers
+sudo usermod -a -G adm,dialout,cdrom,sudo,audio,video,plugdev,games,users,input,netdev,gpio,i2c,spi securite
 
-root>apt install vim
-root> dphys-swapfile swapoff
-root> vim /etc/dphys-swapfile
-	Ø Edit : CONF_SWAPSIZE=2000
-root> dphys-swapfile setup
-root> dphys-swapfile swapon
+# Account security configurations
+sudo deluser --remove-home pi
+sudo sed -i 's/pi/securite/' /etc/sudoers.d/010_pi-nopasswd
 
-#create user
+# SSH configurations
+ssh-keygen -t ed25519 -f ~/.ssh/id_ed25519 -N ""
+ssh-keygen -t rsa -f ~/.ssh/id_rsa -N ""
+# Note: You would ideally append public keys to authorized_keys here
+sudo sed -i -e 's/Port [0-9]*/Port 2222/' -e 's/PasswordAuthentication yes/PasswordAuthentication no/' -e 's/PermitRootLogin yes/PermitRootLogin no/' /etc/ssh/sshd_config
+echo "Banner /etc/issue.net" | sudo tee -a /etc/ssh/sshd_config
+sudo service ssh restart
 
-root > useradd -m securite
-root > passwd securite 
-root > vim /etc/sudoers
-	Ø Edit : securite ALL=(ALL:ALL) ALL
-root > su securite
-securite $> sudo usermod -a -G adm,dialout,cdrom,sudo,audio,video,plugdev,games,users,input,netdev,gpio,i2c,spi securite
-securite $> groups securite
+# Hostname configurations
+echo "station01" | sudo tee /etc/hostname
+sudo sed -i 's/raspberry/station01/' /etc/hosts
 
-#account security
-
-#securite $> sudo pkill -u pi
-securite $> sudo deluser -remove-home pi
-securite $> sudo vim /etc/sudoers.d/010_pi-nopasswd
-	Ø Edit : pi --> securite
-
-#ssh cnfg
-
-#securite $> mkdir ~/.ssh
-securite $> ssh-keygen -t ed25519
-securite $> ssh-keygen -t rsa
-securite $> vim ~/.ssh/autorized_keys 
-	Ø Edit : Add your public keys in the file
-securite $> sudo vim /etc/ssh/sshd_config
-	Ø Edit:
-		○ Port 2222 # Change default port to 2222
-		○ PasswordAuthentication no # Disable password connection, only keys are allowed
-		○ PermitRootLogin no # Remove root connection with ssh.
-		○ Banner /etc/issue.net # Add a beautiful banner before auth.
-securite $> sudo service ssh restart
-
-#hostname cfg
-
-securite $> sudo vim /etc/hostname
-	Ø Edit : station01
-securite $> sudo vim /etc/hosts
-	Ø Edit : remove raspberry and add station01
-
-#zsh terminal
-
-sudo apt install zsh
-
+# Install zsh and configure
+sudo apt install -y zsh
 sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 
-#Clam AV
+# ClamAV configurations
+sudo apt install -y clamav clamav-daemon
+sudo systemctl enable clamav-daemon
 
-securite $> sudo apt install clamav clamav-daemon
-securite $> sudo systemctl enable clamav-daemon
-securite $> ls -l /var/log/clamav
-securite $> sudo touch /var/log/clamav/freshclam.log
-securite $> chmod 600 /var/log/clamav/freshclam.log
-securite $> chown clamav /var/log/clamav/freshclam.log
-
-#virusdb update
-
+sudo touch /var/log/clamav/freshclam.log
+sudo chmod 600 /var/log/clamav/freshclam.log
+sudo chown clamav /var/log/clamav/freshclam.log
 sudo freshclam
 
-#internal logger erro condition
+sudo /etc/init.d/clamav-freshclam stop
+sudo freshclam
+sudo /etc/init.d/clamav-freshclam start
 
-securite $> sudo /etc/init.d/clamav-freshclam stop
-securite $> sudo freshclam
-securite $> sudo /etc/init.d/clamav-freshclam start
+echo "ExecStartPre=/bin/mkdir -p /run/clamav" | sudo tee /etc/systemctl/system/clamav-daemon.service.d/extend.conf
+sudo systemctl daemon-reload
+sudo service clamav-daemon start
 
-#clamav daemon
+# USB Guardian configurations
+git clone https://github.com/AlrikRr.USGBuardian.git
+sudo cp -r USBGuardian/USBGuardian-core /opt/USBGuardian
+sudo chmod +x -R /opt/USBGuardian/scripts
 
-securite $> sudo vim /etc/systemctl/system/clamav-daemon.service.d/extend.conf
-	Ø Edit : ExecStartPre=/bin/mkdir -p /run/clamav
-securite $> sudo systemctl daemon-reload
-securite $> sudo service clamav-daemin start
+# QT5 GUI configurations
+sudo apt install -y qt5-default qtcreator
+cd USBGuardian/USBGuardian-GUI
+qmake USBGuardian.pro
+make
 
-#virusdb auto update
+sudo cp ~/USBGuardian/udev/insertUSB.rules /etc/udev/rules.d/
+sudo udevadm control --reload
+sudo cp ~/USBGuardian/service/insertUSB.service /etc/systemd/system/
+sudo systemctl enable insertUSB.service
 
-#usb gurdian install---
-#change link later
-
-securite $> cd 
-securite $> git clone https://github.com/AlrikRr.USGBuardian.git
-securite $> cd USBGuardian
-securite $> sudo cp -r USBGuardian-core /opt/USBGuardian
-securite $> sudo chmod +x -R /opt/USBGuardian/scripts
-
-
-#QT5 gui
-
-securite $> sudo apt install qt5-default qtcreator
-securite $> cd USBGuardian-GUI
-#compile
-securite $> cd USBGuardian-GUI
-securite $> qmake USBGUardian.pro
-securite $> make
-
-#udev rule usb
-securite $> sudo cp ~/USBGuardian/udev/insertUSB.rules /etc/udev/rules.d/insertUSB.rules
-securite $> sudo udevadm control --reload
-
-securite $> sudo cp ~/USBGuardian/service/insertUSB.service /etc/systemd/system/insertUSB.service
-securite $> sudo systemctl enable insertUSB.service
-
-
-#automount
-
-
-#permision general
-
-securite $> sudo chown clamav:clamav -R /media/securite
-securite $> sudo chmod 760 -R /media/securite
-
-#file permission
-securite $> sudo chown securite -R /opt/USBGuardian/logs
-securite $> sudo chmod 760 -R /opt/USBGuardian/logs
-
+# Setting permissions
+sudo chown clamav:clamav -R /media/securite
+sudo chmod 760 -R /media/securite
+sudo chown securite -R /opt/USBGuardian/logs
+sudo chmod 760 -R /opt/USBGuardian/logs
