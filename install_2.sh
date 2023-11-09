@@ -3,7 +3,7 @@
 lxtermminal -e 
 
 # Remove the temporary cron job
-(sudo crontab -l | grep -v '/path/to/post-reboot-script.sh' | sudo crontab -) || {
+(sudo crontab -l | grep -v '~/Downloads/install_1.sh' | sudo crontab -) || {
   echo "Failed to remove the temporary cron job" | tee -a installation_errors.txt
 }
 
