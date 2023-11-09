@@ -8,7 +8,7 @@
 sudo apt update && sudo apt upgrade -y
 
 p2_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-fpth2_dir="$p2_dir/script2.sh"
+fpth2_dir="$p2_dir/install_2.sh"
 
 # Check for filesystem expansion
 if sudo raspi-config --expand-rootfs; then
