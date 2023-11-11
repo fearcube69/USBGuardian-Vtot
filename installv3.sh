@@ -3,15 +3,11 @@ sudo apt update && sudo apt upgrade -y
 
 
 
-
-# # Remove the temporary cron job
-# (sudo crontab -l | grep -v '~/Downloads/install_1.sh' | sudo crontab -) || {
-#   echo "Failed to remove the temporary cron job" | tee -a installation_errors.txt
-# }
-
-# Set root password - Remember, setting a hardcoded root password in a script is not secure
-(echo "root:YOUR_ROOT_PASSWORD" | sudo chpasswd) || {
+# Ask user to enter their password instead of setting a hardcoded root password
+read -s -p "Enter your root password: " ROOT_PASSWORD
+(echo "root:$ROOT_PASSWORD" | sudo chpasswd) || {
   echo "Failed to set root password" | tee -a installation_errors.txt
+}
 }
 
 # Configure swap
@@ -29,6 +25,10 @@ sudo apt update && sudo apt upgrade -y
 {
   sudo useradd -m securite &&
   echo "securite:YOUR_USER_PASSWORD" | sudo chpasswd &&
+{
+  sudo useradd -m securite &&
+  read -s -p "Enter password for 'securite' user: " SECURITE_PASSWORD &&
+  echo "securite:$SECURITE_PASSWORD" | sudo chpasswd &&
   echo "securite ALL=(ALL:ALL) ALL" | sudo tee -a /etc/sudoers &&
   sudo usermod -a -G adm,dialout,cdrom,sudo,audio,video,plugdev,games,users,input,netdev,gpio,i2c,spi securite
 } || {
@@ -101,7 +101,8 @@ sudo apt update && sudo apt upgrade -y
 
 # QT5 GUI configurations
 {
-  sudo apt install -y qt5-default qtcreator &&
+{
+  sudo apt install -y qt5-default qtcreator python3-pyqt5 python-virustotal-api &&
   cd USBGuardian/USBGuardian-GUI &&
   qmake USBGuardian.pro &&
   make &&
@@ -110,7 +111,8 @@ sudo apt update && sudo apt upgrade -y
   sudo cp ~/USBGuardian/service/insertUSB.service /etc/systemd/system/ &&
   sudo systemctl enable insertUSB.service
 } || {
-  echo "QT5 GUI configurations failed" | tee -a installation_errors.txt
+  echo "QT5 GUI configurations and dependency installation failed" | tee -a installation_errors.txt
+}
 }
 
 # Setting permissions
@@ -130,6 +132,15 @@ if sudo raspi-config --expand-rootfs; then
     # Set up the post-reboot script to run on reboot
     echo "@reboot $USER $fpth2_dir" | sudo crontab -
     sudo reboot
+if sudo raspi-config --expand-rootfs; then
+    echo "Root partition expanded. Would you like to reboot now? [y/N]"
+    read response
+    if [[ $response =~ ^(yes|y)$ ]]
+    then
+        # Set up the post-reboot script to run on reboot
+        echo "@reboot $USER $fpth2_dir" | sudo crontab -
+        sudo reboot
+    fi
 else
     echo "Root partition is already expanded or there was an issue expanding."
     $fpth2_dir
