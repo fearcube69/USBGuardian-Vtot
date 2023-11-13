@@ -1,9 +1,7 @@
 #!/bin/bash
 sudo apt update -y && sudo apt upgrade -y
 
-
-
-# Ask user to enter their password instead of setting a hardcoded root password
+# Change root pwd
 read -s -p "Enter your root password: " ROOT_PASSWORD
 (echo "root:$ROOT_PASSWORD" | sudo chpasswd) || {
   echo "Failed to set root password" | tee -a installation_errors.txt
@@ -35,64 +33,146 @@ read -s -p "Enter your root password: " ROOT_PASSWORD
   echo "Failed to create and configure 'securite' user" | tee -a installation_errors.txt
 }
 
-# Account security configurations
+# Account pi delete
 {
-  sudo deluser --remove-home pi &&
-  sudo sed -i 's/pi/securite/' /etc/sudoers.d/010_pi-nopasswd
+  # Kill processes owned by the "pi" user
+sudo pkill -u pi
+
+# Delete the "pi" user and remove its home directory
+sudo deluser --remove-home pi
+
+# Modify the sudoers file to replace "pi" with "securite"
+sudo sed -i 's/pi securite/pi/' /etc/sudoers.d/010_pi-nopasswd
+
+echo "pi account deleted and sudoers file updated."
+
+# Check if the "pi" user is still logged in
+if who | grep -q pi; then
+  echo "Reboot required to complete the deletion of the pi account."
+  sudo touch /var/run/reboot-required
+fi
 } || {
   echo "Account security configurations failed" | tee -a installation_errors.txt
 }
 
 # SSH configurations
 {
-  ssh-keygen -t ed25519 -f ~/.ssh/id_ed25519 -N "" &&
-  ssh-keygen -t rsa -f ~/.ssh/id_rsa -N "" &&
-  sudo sed -i -e 's/Port [0-9]*/Port 2222/' -e 's/PasswordAuthentication yes/PasswordAuthentication no/' -e 's/PermitRootLogin yes/PermitRootLogin no/' /etc/ssh/sshd_config &&
-  echo "Banner /etc/issue.net" | sudo tee -a /etc/ssh/sshd_config &&
-  sudo service ssh restart
+  #!/bin/bash
+
+# Create the .ssh directory if it doesn't exist
+mkdir -p ~/.ssh
+
+# Generate ed25519 key pair
+ssh-keygen -t ed25519
+
+# Generate RSA key pair
+ssh-keygen -t rsa
+
+# Open the authorized_keys file for editing
+vim ~/.ssh/authorized_keys
+
+# Modify the SSH server configuration file
+sudo sed -i 's/#Port 22/Port 2222/' /etc/ssh/sshd_config
+sudo sed -i 's/#PasswordAuthentication yes/PasswordAuthentication no/' /etc/ssh/sshd_config
+sudo sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin no/' /etc/ssh/sshd_config
+sudo sed -i 's/#Banner none/Banner \/etc\/issue.net/' /etc/ssh/sshd_config
+
+# Restart the SSH service
+sudo service ssh restart
+
+echo "SSH connection configured securely."
+
 } || {
   echo "SSH configurations failed" | tee -a installation_errors.txt
 }
 
 # Hostname configurations
 {
-  echo "station01" | sudo tee /etc/hostname &&
-  sudo sed -i 's/raspberry/station01/' /etc/hosts
+  # Modify the /etc/hostname file
+sudo sed -i 's/.*$/station01/' /etc/hostname
+
+# Modify the /etc/hosts file
+sudo sed -i 's/raspberry/station01/' /etc/hosts
+
+echo "Machine name modified to station01."
 } || {
   echo "Hostname configurations failed" | tee -a installation_errors.txt
 }
 
-# Install zsh without launching a new shell immediately
-{
-  sudo apt install -y zsh &&
-  sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
-} || {
-  echo "ZSH installation failed" | tee -a installation_errors.txt
-}
+# # Install zsh without launching a new shell immediately
+# {
+#   sudo apt install -y zsh &&
+#   sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
+# } || {
+#   echo "ZSH installation failed" | tee -a installation_errors.txt
+# }
 
-# ClamAV configurations
+
+
+# ClamAV install and configurations
 {
-  sudo apt install -y clamav clamav-daemon &&
-  sudo systemctl enable clamav-daemon &&
-  sudo touch /var/log/clamav/freshclam.log &&
-  sudo chmod 600 /var/log/clamav/freshclam.log &&
-  sudo chown clamav /var/log/clamav/freshclam.log &&
-  sudo freshclam &&
-  sudo /etc/init.d/clamav-freshclam stop &&
-  sudo freshclam &&
-  sudo /etc/init.d/clamav-freshclam start &&
-  echo "ExecStartPre=/bin/mkdir -p /run/clamav" | sudo tee /etc/systemctl/system/clamav-daemon.service.d/extend.conf &&
-  sudo systemctl daemon-reload &&
-  sudo service clamav-daemon start
+#!/bin/bash
+
+# Install ClamAV and ClamAV-daemon
+sudo apt install clamav clamav-daemon -y
+
+# Enable ClamAV-daemon
+sudo systemctl enable clamav-daemon
+
+# Check if freshclam.log exists
+if [ ! -f /var/log/clamav/freshclam.log ]; then
+    # Create freshclam.log if it doesn't exist
+    sudo touch /var/log/clamav/freshclam.log
+    sudo chmod 600 /var/log/clamav/freshclam.log
+    sudo chown clamav /var/log/clamav/freshclam.log
+fi
+
+# Update the virus database
+sudo freshclam
+
+# If there's a problem with the internal logger, stop the service, update, and then start the service again
+if [ $? -ne 0 ]; then
+    sudo /etc/init.d/clamav-freshclam stop
+    sudo freshclam
+    sudo /etc/init.d/clamav-freshclam start
+fi
+
+# Modify clamav-daemon configuration
+echo -e "[Service]\nExecStartPre=/bin/mkdir -p /run/clamav" | sudo tee /etc/systemd/system/clamav-daemon.service.d/extend.conf
+sudo systemctl daemon-reload
+sudo service clamav-daemon start
+
+# Set up automatic update of the virus database
+echo -e "#!/bin/sh\n/etc/init.d/clamav-freshclam stop\n/usr/bin/freshclam -v >> /var/log/clamav/freshclam.log\n/etc/init.d/clamav-freshclam start" | sudo tee /etc/cron.daily/freshclam
+sudo chmod +x /etc/cron.daily/freshclam
+
+echo "ClamAV installation and configuration completed."
+
 } || {
   echo "ClamAV configurations failed" | tee -a installation_errors.txt
 }
 
 # USB Guardian configurations
 {
-  git clone https://github.com/AlrikRr.USGBuardian.git &&
-  sudo cp -r USBGuardian/USBGuardian-core /opt/USBGuardian &&
-  sudo chmod +x -R /opt/USBGuardian/scripts
+  
+
+# Navigate to home directory
+cd ~
+
+# Clone the USBGuardian repository
+git clone https://github.com/AlrikRr/USBGuardian.git
+
+# Navigate to the USBGuardian directory
+cd USBGuardian
+
+# Copy the USBGuardian-core directory to /opt/USBGuardian
+sudo cp -r USBGuardian-core /opt/USBGuardian
+
+# Make the scripts in /opt/USBGuardian/scripts executable
+sudo chmod +x -R /opt/USBGuardian/scripts
+
+echo "USBGuardian installation completed."
+
 } ||
 
  {
@@ -102,28 +182,90 @@ read -s -p "Enter your root password: " ROOT_PASSWORD
 # QT5 GUI configurations
 {
 {
-  sudo apt install -y qt5-default qtcreator python3-pyqt5 python-virustotal-api &&
-  cd USBGuardian/USBGuardian-GUI &&
-  qmake USBGuardian.pro &&
-  make &&
-  sudo cp ~/USBGuardian/udev/insertUSB.rules /etc/udev/rules.d/ &&
-  sudo udevadm control --reload &&
-  sudo cp ~/USBGuardian/service/insertUSB.service /etc/systemd/system/ &&
-  sudo systemctl enable insertUSB.service
+  #!/bin/bash
+
+# Install Qt5 and Qt Creator
+sudo apt install qt5-default qtcreator -y
+
+# Navigate to the USBGuardian-GUI directory
+cd ~/USBGuardian/USBGuardian-GUI
+
+# Compile the application
+qmake USBGuardian.pro
+make
+
+# Run the USBGuardian binary
+./USBGuardian
+
+echo "USBGuardian GUI compiled and run successfully."
+
 } || {
   echo "QT5 GUI configurations and dependency installation failed" | tee -a installation_errors.txt
 }
 }
 
+
+
+#UDEV rule config
+
+# Copy the insertUSB.rules file to /etc/udev/rules.d/
+sudo cp ~/USBGuardian/udev/insertUSB.rules /etc/udev/rules.d/insertUSB.rules
+
+# Reload the UDEV rules
+sudo udevadm control --reload
+
+echo "UDEV rule for USB detection added and UDEV rules reloaded."
+
+
+#Insert USB service
+
+ sudo cp ~/USBGuardian/service/insertUSB.service /etc/systemd/system/insertUSB.service
+ sudo systemctl enable insertUSB.service
+
+# Open the Raspbian file explorer preferences
+pcmanfm --preferences
+
+# Wait for the preferences window to open
+sleep 2
+
+# Activate the "Removable media" tab
+xdotool key Tab
+
+# Uncheck the "Display options for removable media when inserted" checkbox
+xdotool key space
+
+# Close the preferences window
+xdotool key Alt+F4
+
+echo "Automount configuration completed."
+
+
+
+
+
+
+
+
+
+
+
 # Setting permissions
 {
-  sudo chown clamav:clamav -R /media/securite &&
-  sudo chmod 760 -R /media/securite &&
-  sudo chown securite -R /opt/USBGuardian/logs &&
-  sudo chmod 760 -R /opt/USBGuardian/logs
+  # Set ownership and permissions for /media/securite/
+sudo chown clamav:clamav -R /media/securite
+sudo chmod 760 -R /media/securite
+
+# Set ownership and permissions for /opt/USBGuardian/logs
+sudo chown securite -R /opt/USBGuardian/logs
+sudo chmod 760 -R /opt/USBGuardian/logs
+
+echo "Permissions set successfully."
 } || {
   echo "Setting permissions failed" | tee -a installation_errors.txt
 }
+
+#autoreload clamAV
+sudo sed -i 's/#AutomaticReload yes/AutomaticReload yes/' /etc/clamav/clamd.conf
 
  Check for filesystem expansion
 if sudo raspi-config --expand-rootfs; then
