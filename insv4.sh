@@ -27,6 +27,7 @@ su - securite
 sudo pkill -u pi
 sudo deluser --remove-home pi
 sudo sed -i 's/pi securite/pi/' /etc/sudoers.d/010_pi-nopasswd
+sudo -i -u securite
 
 # SSH configurations
 mkdir -p ~/.ssh
