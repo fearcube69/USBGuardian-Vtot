@@ -10,29 +10,13 @@ read -s -p "Enter your root password: " ROOT_PASSWORD
 }
 
 # Configure swap
-sudo apt install -y vim &&
+#sudo apt install -y vim &&
 sudo dphys-swapfile swapoff &&
 echo "CONF_SWAPSIZE=2000" | sudo tee /etc/dphys-swapfile &&
 sudo dphys-swapfile setup &&
 sudo dphys-swapfile swapon
 
-# Create and configure 'securite' user
-sudo useradd -m securite &&
-read -s -p "Enter password for 'securite' user: " SECURITE_PASSWORD &&
-echo "securite:$SECURITE_PASSWORD" | sudo chpasswd &&
-echo "securite ALL=(ALL:ALL) ALL" | sudo tee -a /etc/sudoers &&
-sudo usermod -a -G adm,dialout,cdrom,sudo,audio,video,plugdev,games,users,input,netdev,gpio,i2c,spi securite
-su - securite
-# Delete 'pi' account
-sudo pkill -u pi
-sudo deluser --remove-home pi
-sudo sed -i 's/pi securite/pi/' /etc/sudoers.d/010_pi-nopasswd
-sudo -u securite bash <<EOF
 
-# Delete 'pi' account
-sudo pkill -u pi
-sudo deluser --remove-home pi
-sudo sed -i 's/pi securite/pi/' /etc/sudoers.d/010_pi-nopasswd
 
 # SSH configurations
 mkdir -p ~/.ssh
@@ -93,4 +77,11 @@ sudo chmod 760 -R /opt/USBGuardian/logs
 # Enable auto-reload for ClamAV daemon
 sudo sed -i 's/#AutomaticReload yes/AutomaticReload yes/' /etc/clamav/clamd.conf
 
-EOF
+# Check for filesystem expansion
+if sudo raspi-config --expand-rootfs; then
+  echo "Root partition expanded. Would you like to reboot now? [y/N]"
+  read response
+  if [[ $response =~ ^(yes|y)$ ]]; then
+    sudo reboot
+  fi
+else
