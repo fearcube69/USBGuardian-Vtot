@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # Create and configure 'securite' user
 sudo useradd -m securite &&
 read -s -p "Enter password for 'securite' user: " SECURITE_PASSWORD &&
