@@ -27,7 +27,12 @@ su - securite
 sudo pkill -u pi
 sudo deluser --remove-home pi
 sudo sed -i 's/pi securite/pi/' /etc/sudoers.d/010_pi-nopasswd
-sudo -i -u securite
+sudo -u securite bash <<EOF
+
+# Delete 'pi' account
+sudo pkill -u pi
+sudo deluser --remove-home pi
+sudo sed -i 's/pi securite/pi/' /etc/sudoers.d/010_pi-nopasswd
 
 # SSH configurations
 mkdir -p ~/.ssh
@@ -88,11 +93,4 @@ sudo chmod 760 -R /opt/USBGuardian/logs
 # Enable auto-reload for ClamAV daemon
 sudo sed -i 's/#AutomaticReload yes/AutomaticReload yes/' /etc/clamav/clamd.conf
 
-# Check for filesystem expansion
-if sudo raspi-config --expand-rootfs; then
-  echo "Root partition expanded. Would you like to reboot now? [y/N]"
-  read response
-  if [[ $response =~ ^(yes|y)$ ]]; then
-    sudo reboot
-  fi
-else
+EOF
