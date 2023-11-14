@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Update and upgrade packages
-sudo apt update -y && sudo apt upgrade -y
+#sudo apt update -y && sudo apt upgrade -y
 
 # Change root password
 read -s -p "Enter your root password: " ROOT_PASSWORD
