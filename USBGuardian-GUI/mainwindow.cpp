@@ -284,7 +284,7 @@ void MainWindow::confirmDeviceRestart()
 void MainWindow::on_btnRemove_clicked()
 {
     QMessageBox messageBox;
-    messageBox.setText("Voulez vous supprimer les fichiers infectés ?");
+    messageBox.setText("Do you want to delete the infected files?");
     messageBox.setIcon(QMessageBox::Warning);
     messageBox.setStandardButtons(QMessageBox::Yes | QMessageBox::Cancel);
 
@@ -314,8 +314,8 @@ void MainWindow::removeVirus(){
 void MainWindow::on_btnFormat_clicked()
 {
     QMessageBox messageBox;
-    messageBox.setWindowTitle("Formatage de la clé USB");
-    messageBox.setText("Voulez vous formater votre clé USB ? Toutes les données seront perdus !");
+    messageBox.setWindowTitle("Formatting the USB drive.");
+    messageBox.setText("Do you want to format your USB key? All data will be lost. !");
     messageBox.setIcon(QMessageBox::Warning);
     messageBox.setStandardButtons(QMessageBox::Yes | QMessageBox::Cancel);
 
@@ -336,7 +336,7 @@ void MainWindow::formatUSB(){
     pFormat.start("python3 /opt/USBGuardian/scripts/formatUSB.py");
     pFormat.waitForFinished();
     QMessageBox messageBox;
-    messageBox.setText("Votre clé USB a été formatée.");
+    messageBox.setText("Your USB key has been formatted.");
     messageBox.setIcon(QMessageBox::Information);
     messageBox.setStandardButtons(QMessageBox::Ok);
     int exec = messageBox.exec();
@@ -381,7 +381,7 @@ void MainWindow::on_btn_cancel_analyze_clicked()
 
 void MainWindow::exceptionMessageUsbRemoved()
 {
-    ui->label_exception_title->setText("Attention la clé USB a été retirée !");
+    ui->label_exception_title->setText("Warning, the USB key has been removed.!");
     ui->stackedWidget->setCurrentIndex(4);
 }
 
