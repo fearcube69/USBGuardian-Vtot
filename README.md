@@ -22,7 +22,7 @@ Look at the user manual : [usbguardian-user-manual.pdf](https://usbguardian.file
 # Prerequisite  :mag_right:
 - Raspberry Pi 4 (2GB or +)
 - SDCard (16GB or +)
-- img Raspbian Buster Desktop
+- img Raspbian Buster Desktop (Choose 32-Bit Version)
 - Keyboard / Mouse
 - Internet connection
 
@@ -151,7 +151,7 @@ Modification of the clamav-daemon conf:
 securite $> sudo vim /etc/systemctl/system/clamav-daemon.service.d/extend.conf
 	Ø Edit : ExecStartPre=/bin/mkdir -p /run/clamav
 securite $> sudo systemctl daemon-reload
-securite $> sudo service clamav-daemin start
+securite $> sudo service clamav-daemon start
 ```
 Automatic update of the virus database:
 ```bash
@@ -175,7 +175,7 @@ securite $> sudo chmod +x -R /opt/USBGuardian/scripts
 ## ----- QT5
 QQt5 will help you to compile the GUI. If you want to modify the GUI, I recommend you to install the `qtcreator` package:  
 ```bash
-securite $> sudo apt install qt5-default qtcreator
+securite $> sudo apt-get install qt5-default qtcreator
 securite $> cd USBGuardian-GUI
 ```
 Then, you have to compile the application to have an executable binary:  
